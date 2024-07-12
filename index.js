@@ -1,25 +1,45 @@
 // index.js
 const express = require('express');
 const app = express();
+const path = require('path');
 const pool = require('./db');
+const bodyParser = require('body-parser');
 
-app.get('/', async (req, res) => {
+
+// Middleware
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('public'));
+
+// Serve the login form (index.html) at the root route
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.post('/login', async (req, res) => {
+    const { userId, password } = req.body;
+
     try {
-        const [rows, fields] = await pool.query('SELECT * FROM users');
+        // Query the database to find the user
+        const [rows] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
 
-        // Create a string representation of the user data
-        let userData = '';
-        rows.forEach(row => {
-            userData += `ID: ${row.id}, Username: ${row.username}, Email: ${row.email}\n`;
-        });
-
-        res.send(userData); // Send the user data as plain text
-
+        if (rows.length > 0) {
+            const user = rows[0];
+            
+            // Compare the entered password with the stored password
+            if (password === user.password) {
+                res.send('Hello World!'); // Replace with your desired redirection
+            } else {
+                res.send('Invalid credentials');
+            }
+        } else {
+            res.send('User not found');
+        }
     } catch (err) {
-        console.error('Error fetching users:', err);
+        console.error('Error during login:', err);
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 // Start the server
 if (require.main === module) {
