@@ -4,6 +4,10 @@ const app = express();
 const path = require('path');
 const pool = require('./db');
 const bodyParser = require('body-parser');
+const middleware = require('./middleware');
+
+// Apply middleware
+middleware(app);  // Call the middleware function and pass the app instance
 
 
 // Middleware
@@ -15,6 +19,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Login route 
 app.post('/login', async (req, res) => {
     const { userId, password } = req.body;
 
@@ -24,10 +29,11 @@ app.post('/login', async (req, res) => {
 
         if (rows.length > 0) {
             const user = rows[0];
-            
+
             // Compare the entered password with the stored password
             if (password === user.password) {
-                res.send('Hello World!'); // Replace with your desired redirection
+                req.session.userId = user.id; // Store user ID in session
+                res.redirect('/hello'); // Redirect to /hello on successful login
             } else {
                 res.send('Invalid credentials');
             }
@@ -38,6 +44,25 @@ app.post('/login', async (req, res) => {
         console.error('Error during login:', err);
         res.status(500).send('Internal Server Error');
     }
+});
+
+// Hello World route (protected)
+app.get('/hello', (req, res) => {
+    if (req.session.userId) {
+        res.sendFile(path.join(__dirname, 'public', 'hello.html'));
+    } else {
+        res.redirect('/'); // Redirect to login if not logged in
+    }
+});
+
+// Logout route
+app.get('/logout', (req, res) => {
+    req.session.destroy((err) => { // Destroy the session
+        if (err) {
+            console.error('Error destroying session:', err);
+        }
+        res.redirect('/'); // Redirect to login after logout
+    });
 });
 
 
