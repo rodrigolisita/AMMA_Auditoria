@@ -6,6 +6,8 @@ const middleware = require('./middleware');
 const authRoutes = require('./routes/auth'); 
 const indexRoutes = require('./routes/index');
 const path = require('path');
+const { isAuthenticated } = require('./middleware');
+
 
 
 // Apply middleware
@@ -26,7 +28,7 @@ app.use('/', indexRoutes);
 app.use('/auth', authRoutes);
 
 // Hello World route (protected - updated to use res.render)
-app.get('/hello', app.isAuthenticated, (req, res) => {
+app.get('/hello', isAuthenticated, (req, res) => {
     res.render('hello', { user: req.user }); // Render the 'hello.ejs' template
 });
 

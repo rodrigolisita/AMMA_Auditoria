@@ -4,20 +4,6 @@ const session = require('express-session');
 const passport = require('./passport');
 const flash = require('connect-flash'); // Add this for flash messages
 
-function isAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) { // Check if the user is authenticated
-      return next(); // If authenticated, proceed to the next middleware/route handler
-    }
-    res.redirect('/auth/login'); // If not authenticated, redirect to the login page
-}
-
-function isAdmin(req, res, next) {
-    if (req.isAuthenticated() && req.user.role === 'admin') {
-      return next();
-    }
-    res.status(403).send('Access denied'); // Or redirect to another page
-}  
-
 module.exports = (app) => {
     // Helmet security headers
     app.use(helmet());
@@ -33,7 +19,7 @@ module.exports = (app) => {
     );
 
     // Connect-flash for flash messages
-    app.use(flash()); 
+    app.use(flash());
 
     // Passport middleware initialization
     app.use(passport.initialize());
@@ -46,8 +32,26 @@ module.exports = (app) => {
         res.locals.error = req.flash('error'); // For passport errors
         next();
     });
-
-    // Export the isAuthenticated middleware function
-    app.isAuthenticated = isAuthenticated;
-    app.isAdmin = isAdmin; // Export the isAdmin middleware function 
 };
+
+
+// Authentication middleware functions
+function isAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) { // Check if the user is authenticated
+      return next(); // If authenticated, proceed to the next middleware/route handler
+    }
+    req.flash('error_msg', 'Please log in to view this resource');
+    res.redirect('/auth/login'); // If not authenticated, redirect to the login page
+  }
+  
+  function isAdmin(req, res, next) {
+    if (req.isAuthenticated() && req.user.role === 'admin') {
+      return next();
+    }
+    req.flash('error_msg', 'You are not authorized to view this resource');
+    res.redirect('/dashboard'); // or any other appropriate route
+  }
+  
+  module.exports.isAuthenticated = isAuthenticated;
+  module.exports.isAdmin = isAdmin;
+  

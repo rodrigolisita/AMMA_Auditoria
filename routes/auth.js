@@ -4,6 +4,8 @@ const router = express.Router();
 const passport = require('../passport');
 const User = require('../models/user'); // Make sure this path is correct
 const bcrypt = require("bcrypt");
+const { isAuthenticated } = require('../middleware');
+
 
 // Login Route
 router.post('/login', passport.authenticate('local', {
