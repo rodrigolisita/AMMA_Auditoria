@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Edit Profile</title>
-  <link rel="stylesheet" href="/styles/main.css">
-</head>
-<body>
-  <h2>Edit Profile</h2>
-  
-  <p>Current Username: <%= user.username %></p> <form action="/user/edit-profile" method="post">
+<h2>Edit Profile</h2>
+  <p>Current Username: <%= user.username %></p> 
+  <form action="/user/edit-profile" method="post">
     <input type="hidden" name="userId" value="<%= user.id %>"> 
 
     <label for="username">New Username:</label>
@@ -21,5 +14,4 @@
 
     <button type="submit" class="btn btn-primary">Save Changes</button>
   </form>
-</body>
 </html>

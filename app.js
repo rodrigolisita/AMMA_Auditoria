@@ -1,6 +1,7 @@
 // app.js
 const express = require('express');
 const app = express();
+const expressLayouts = require('express-ejs-layouts');
 const passport = require('./passport');
 const middleware = require('./middleware');
 const authRoutes = require('./routes/auth'); 
@@ -15,9 +16,13 @@ middleware(app);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-// Set EJS as the view engine
-app.set('view engine', 'ejs'); 
+// Templating Engine
+app.use(expressLayouts);
+app.set("layout", "./layouts/full-width");
+app.set("view engine", "ejs");
+//app.set("views", __dirname + "/views");
 app.set('views', path.join(__dirname, 'views')); 
+app.locals.siteTitle = "Auditoria Online"; // Set in app.locals
 
 // Mount the index routes at the root path ('/')
 app.use('/', indexRoutes);

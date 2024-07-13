@@ -5,7 +5,9 @@ const path = require('path');
 
 // Index Route (Unprotected)
 router.get('/', (req, res) => {
-    res.render('index');
+    res.render('index',{
+        title: req.app.locals.siteTitle
+    });
 });
 
 module.exports = router; 
