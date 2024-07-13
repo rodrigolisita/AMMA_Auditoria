@@ -5,7 +5,7 @@ const path = require('path');
 
 // Index Route (Unprotected)
 router.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public', 'index.html'));
+    res.render('index');
 });
 
 module.exports = router; 
