@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit Profile</title>
+  <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+  <h2>Edit Profile</h2>
+  
+  <p>Current Username: <%= user.username %></p> <form action="/user/edit-profile" method="post">
+    <input type="hidden" name="userId" value="<%= user.id %>"> 
+
+    <label for="username">New Username:</label>
+    <input type="text" id="username" name="username" value="<%= user.username %>"><br><br>
+
+    <label for="password">New Password:</label>
+    <input type="password" id="password" name="password"><br><br>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" value="<%= user.email %>"><br><br>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+  </form>
+</body>
+</html>

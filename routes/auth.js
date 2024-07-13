@@ -9,7 +9,7 @@ const { isAuthenticated } = require('../middleware');
 
 // Login Route
 router.post('/login', passport.authenticate('local', {
-  successRedirect: '/hello', // Redirect to /hello on successful login
+  successRedirect: '/user/hello', // Redirect to /hello on successful login
   failureRedirect: '/',  // Redirect to the index route on failure
   failureFlash: true, // Enable flash messages for error handling
 }), (req, res) => {
