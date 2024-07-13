@@ -7,6 +7,7 @@ const middleware = require('./middleware');
 const authRoutes = require('./routes/auth'); 
 const indexRoutes = require('./routes/index');
 const userRoutes = require('./routes/user');
+const adminRoutes = require('./routes/admin');
 const path = require('path');
 
 // Apply middleware
@@ -29,8 +30,9 @@ app.use('/', indexRoutes);
 
 // Mount the auth routes under the '/auth' path
 app.use('/auth', authRoutes);
-
 app.use('/user', userRoutes); // Mount userRoutes at the '/user' path (or any path you prefer)
+app.use('/admin', adminRoutes);
+
 
 // Start the server
 if (require.main === module) {

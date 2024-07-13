@@ -49,7 +49,7 @@ function isAuthenticated(req, res, next) {
       return next();
     }
     req.flash('error_msg', 'You are not authorized to view this resource');
-    res.redirect('/dashboard'); // or any other appropriate route
+    res.redirect('/hello'); // or any other appropriate route
   }
   
   module.exports.isAuthenticated = isAuthenticated;
