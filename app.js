@@ -1,10 +1,10 @@
-// index.js
+// app.js
 const express = require('express');
 const app = express();
-const passport = require('./passport'); // Import Passport
+const passport = require('./passport');
 const middleware = require('./middleware');
 const authRoutes = require('./routes/auth'); 
-const indexRoutes = require('./routes/index'); // Import the index routes
+const indexRoutes = require('./routes/index');
 const path = require('path');
 
 
@@ -15,21 +15,20 @@ middleware(app);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
+// Set EJS as the view engine
+app.set('view engine', 'ejs'); 
+app.set('views', path.join(__dirname, 'views')); 
+
 // Mount the index routes at the root path ('/')
 app.use('/', indexRoutes);
 
 // Mount the auth routes under the '/auth' path
 app.use('/auth', authRoutes);
 
-// Hello World route (protected - update with Passport middleware)
+// Hello World route (protected - updated to use res.render)
 app.get('/hello', app.isAuthenticated, (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'hello.html'));
+    res.render('hello', { user: req.user }); // Render the 'hello.ejs' template
 });
-
-// Protected Admin Dashboard Route
-app.get('/admin-dashboard', app.isAdmin, (req, res) => {
-    // ... admin dashboard content (e.g., render a view, send JSON data, etc.)
-  });
 
 // Start the server
 if (require.main === module) {
@@ -39,4 +38,4 @@ if (require.main === module) {
     });
 }
 
-module.exports = app; 
+module.exports = app;
